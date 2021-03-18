@@ -1,0 +1,49 @@
+.pic {
+
+    width: 100px;
+    height: 100px;
+  }
+  
+  .pic img {
+      width: 80px;
+      height: 80px;
+  }
+  
+  .prev {
+   bottom: 100px;
+  }
+  
+  .prev.move {
+    bottom: -100px;
+    transition: all .1s ease;
+    transition-timing-function: linear;
+  }
+  
+  .current {
+    bottom: 200px;
+  }
+  
+  .current.move {
+    bottom: 0;
+    transition: all .1s ease;
+    transition-timing-function: linear;
+  }
+  
+  .next {
+    bottom: 300px;
+  }
+  
+  .next.move {
+    bottom: 100px;
+    transition: all .1s ease;
+    transition-timing-function: linear;
+  }
+  
+  .pic-wrapper {
+    background: lightgray;
+    width: 100px;
+    overflow: hidden;
+    display:flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
