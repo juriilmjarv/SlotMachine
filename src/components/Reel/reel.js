@@ -6,8 +6,11 @@ import threebar from '../../assets/images/3xBAR.png';
 import bar from '../../assets/images/BAR.png';
 import cherry from '../../assets/images/Cherry.png';
 
-//interval variable for spinning
-var interval;
+//global variables for animation
+var timeout;
+var g;
+var fps = 30;
+
 //define pictures
 const pics = [
   threebar,
@@ -30,6 +33,7 @@ class Reel extends React.Component {
       prev: this.getPrevIndex(idxStart),
       move: false,
     };
+
   }
 
   //get next item
@@ -59,64 +63,61 @@ class Reel extends React.Component {
 
   //spin for specific time and stop on item.
   timeToSpin = (id) => {
-    //this.setIndexes(id)
-    this.spin();
 
+    //start spinning animation
+    this.startAnimation();
+
+    //stop it after a given time
     setTimeout(() => {
-      this.stopSpin(id);
-      
-      //var random = fruits[Math.floor(Math.random()* fruits.length)];
-      //this.stopShuffle();
-      //document.getElementById('fruit1').innerHTML = random;
-      //this.setState({
-      //  fruit1: random
-      //})
+
+      //set final state
+      this.setState({
+        index: id,
+        next: this.getNextIndex(id),
+        prev: this.getPrevIndex(id)
+      })
+
     }, this.props.time);    
   }
 
-  //start spinning the reel using interval loop
-  spin = () => {
-    interval = setInterval(() => {
-      // on
+  performAnimation = (e) => {
+    //set timeout for frame rate
+    timeout = setTimeout(() => {
+
+      //enable move state to start moving using css tag
       this.setState({
         move: true
       });
-      // off
-      setTimeout(() => {
-        this.setState({
-          move: false
-        });
-        this.setIndexes(this.getNextIndex(this.state.index));
-      }, 100); // same delay as in the css transition here
-    }, 150);
-    console.log("interval: " + interval);
+
+      //set the index
+      this.setIndexes(this.getNextIndex(this.state.index));
+
+      //request animation Frame to repeat the process
+      g = requestAnimationFrame(this.performAnimation);
+
+    }, 1000/fps);
   }
 
-  stopSpin = (id) => {
-    //clear interval of each reel
+  //start the actual animation
+  startAnimation = () => {
+
+    //start animation
+    this.performAnimation();
+
+    //stop animation after given time
     setTimeout(() => {
-      this.setIndexes(id);
-      clearInterval(interval);
-    }, 0)
-      //this.setIndexes(id);
-     // clearInterval(interval);
-      setTimeout(() => {
-        this.setIndexes(id);
-        clearInterval(interval-2);
-      }, 1000)
-     // setTimeout(() => {
-     //   clearInterval(interval-4)
-    //  },2000)
-      
-      //clearInterval(interval-2);
-      clearInterval(interval-4);
-    
-   
-    console.log("interval: " + interval);
-    console.log(this.state.index);
-    console.log(this.state.next);
-    console.log(this.state.prev);
-    
+
+      //cancel animation
+      cancelAnimationFrame(g);
+      //clear the timeout
+      clearTimeout(timeout);
+
+      //set state back to false to stop css transition
+      this.setState({
+        move: false
+      })
+
+    }, this.props.time);
   }
 
     render() {
@@ -128,7 +129,7 @@ class Reel extends React.Component {
             {this.state.prev}
             <img src={pics[this.state.prev]} alt=""/>
           </div>
-          <div className={`current pic ${move}`}>
+          <div className={`current pic ${move}`} style={{background: 'lightblue'}}>
             {this.state.index}
             <img src={pics[this.state.index]} alt="" />
           </div>

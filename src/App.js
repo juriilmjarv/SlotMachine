@@ -10,46 +10,19 @@ class App extends React.Component {
     super(props);
     const idxStart = 0;    
 
-    // get ref of dic onn which elements will roll
-    //this.slotRef = [React.createRef(), React.createRef(), React.createRef()];
     this.reel1 = React.createRef();
     this.reel2 = React.createRef();
     this.reel3 = React.createRef();
+
+    this.state = {
+      moving: false
+    }
   }
  
-  /*
-  spin = () => {
-    this.startShuffle();
-
-    setTimeout(() => {
-      var random = fruits[Math.floor(Math.random()* fruits.length)];
-      this.stopShuffle();
-      document.getElementById('fruit1').innerHTML = random;
-      this.setState({
-        fruit1: random
-      })
-    }, 2000);    
-  }
-
-  startShuffle = () => {
-    var count = 0;
-    interval = setInterval(() => {
-      document.getElementById('fruit1').innerHTML = fruits[count++];
-      document.getElementById('fruit2').innerHTML = fruits[count++];
-      if(count === fruits.length){
-        count =0;
-      } 
-    },300)
-  }
-
-  stopShuffle = () => {
-    clearInterval(interval);
-  }
- */
   startReel = () => {
-    this.reel1.current.timeToSpin(0);
-    this.reel2.current.timeToSpin(0);
-    this.reel3.current.timeToSpin(0);
+    this.reel1.current.timeToSpin(4);
+    this.reel2.current.timeToSpin(4);
+    this.reel3.current.timeToSpin(4);
   };
 
   stop = () => {
@@ -65,33 +38,31 @@ class App extends React.Component {
         <h1>Slot Machine</h1>
 
         <Container>
-        <Row className="justify-content-md-center">
-          <Col xs lg="1" align='center'>
+          <Row className="justify-content-md-center">
+            <Col xs lg="1" align='center'>
               <Reel
                 idxStart={1}
                 time={2000}
-                ref={this.reel1}
+                ref={this.reel3}
               />
-          </Col>
-          <Col xs lg="1" align='center'>
+            </Col>
+            <Col xs lg="1" align='center'>
               <Reel
                 idxStart={3}
                 time={2500}
                 ref={this.reel2}
               />
-          </Col>
-          <Col xs lg="1" align='center'>
-            <Reel
-              idxStart={0}
-              time={3000}
-              ref={this.reel3}
-            />
-          </Col>
-        </Row>
+            </Col>
+            <Col xs lg="1" align='center'>
+              <Reel
+                idxStart={0}
+                time={3000}
+                ref={this.reel1}
+              />
+            </Col>
+          </Row>
         </Container>
         <button onClick={this.startReel}>Spin</button>
-        <button onClick={this.stop}>Reset</button>
-
       </div>
     );
   }
