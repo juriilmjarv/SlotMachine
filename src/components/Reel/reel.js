@@ -62,7 +62,7 @@ class Reel extends React.Component {
   }
 
   //spin for specific time and stop on item.
-  timeToSpin = (id) => {
+  stopAtElement = (id) => {
 
     //start spinning animation
     this.startAnimation();

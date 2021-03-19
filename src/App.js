@@ -19,17 +19,12 @@ class App extends React.Component {
     }
   }
  
+  //Start the spinning and stop on specified parameter value
   startReel = () => {
-    this.reel1.current.timeToSpin(4);
-    this.reel2.current.timeToSpin(4);
-    this.reel3.current.timeToSpin(4);
+    this.reel1.current.stopAtElement(4);
+    this.reel2.current.stopAtElement(4);
+    this.reel3.current.stopAtElement(4);
   };
-
-  stop = () => {
-    this.reel1.current.stopSpin();
-    this.reel2.current.stopSpin();
-    this.reel3.current.stopSpin();
-  }
 
   render(){
 
