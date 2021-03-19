@@ -33,7 +33,11 @@ class Reel extends React.Component {
       prev: this.getPrevIndex(idxStart),
       move: false,
     };
+    var { changeState} = this.props;
+  }
 
+  componentDidMount(){
+    console.log(this.props);
   }
 
   //get next item
@@ -89,6 +93,9 @@ class Reel extends React.Component {
         move: true
       });
 
+      if(this.props.time == 3000){
+        this.props.setMoveInAppState(this.state.move);
+      }
       //set the index
       this.setIndexes(this.getNextIndex(this.state.index));
 
@@ -100,6 +107,7 @@ class Reel extends React.Component {
 
   //start the actual animation
   startAnimation = () => {
+    //this.props.setMoveInAppState(1);
 
     //start animation
     this.performAnimation();
@@ -117,8 +125,18 @@ class Reel extends React.Component {
         move: false
       })
 
+      //change a
+      if(this.props.time == 3000){
+        this.props.setMoveInAppState(this.state.move);
+      }
+
     }, this.props.time);
   }
+
+  setMoveInReelState = (value) => {
+    this.setState({ ...this.state, move: value });
+    this.props.setMoveInAppState(value);
+  };
 
     render() {
       const move = this.state.move ? 'move' : '';
