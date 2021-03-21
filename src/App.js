@@ -80,6 +80,7 @@ class App extends React.Component {
     }, 3000)
   };
 
+  //Starts regular random reel spin
   startRegReel = () => {
     var val1 = this.getRandomNr()
     var val2 = this.getRandomNr()
@@ -95,10 +96,12 @@ class App extends React.Component {
 
   //blink text for 3 seconds if won
   blinkingPaytable(prize){
+
     this.setState({
       blinking: true,
       paytable: prize
     });
+
     setTimeout(() => {
       this.setState({ 
         blinking: false,
@@ -113,31 +116,37 @@ class App extends React.Component {
   };
 
   
-
-  handleChange = (event) => {
-    this.setState({
-      debug1: event.target.value
-    });
+  //handles change
+  handleChange = (e) => {
+    const re = /^[0-4]$/;
+    if (e.target.value === '' || re.test(e.target.value)) {
+      this.setState({debug3: e.target.value})
+    } 
   }
 
-  handleChange1 = (event) => {
-    this.setState({
-      debug2: event.target.value
-    });
+  //handles change
+  handleChange1 = (e) => {
+    const re = /^[0-4]$/;
+    if (e.target.value === '' || re.test(e.target.value)) {
+      this.setState({debug2: e.target.value})
+    } 
   }
 
-  handleChange2 = (event) => {
-    this.setState({
-      debug3: event.target.value
-    });
+  //handles change
+  handleChange2 = (e) => {
+    const re = /^[0-4]$/;
+    if (e.target.value === '' || re.test(e.target.value)) {
+      this.setState({debug1: e.target.value})
+    } 
   }
 
+  //Debug form submit
   handleSubmit = (event) => {
     this.startReel(parseInt(this.state.debug1), parseInt(this.state.debug2), parseInt(this.state.debug3));
     event.preventDefault();
   }
 
-  //allow value between 0-5000 only
+  //allow value between 1-5000 only
   onBalanceChange = (e) => {
     const re = /^(?:[1-9]|\d{2,3}|[1-4]\d{3}|5000)$/;
     
@@ -160,66 +169,67 @@ class App extends React.Component {
       regularspin = <h3 className='spinbtn white'>Spinning...</h3>
       debugspin = <h3 className='spinbtn white'>Spinning...</h3>
     } else if(moving === false && balance === 0){
-      regularspin = <h3 claseName='spinbtn white'>Please deposit some money 💵</h3>
+      regularspin = <h3 claseName='spinbtn white' style={{color: 'white'}}>Please deposit some money 💵</h3>
       debugspin = <h3 className='spinbtn white'>Make deposit first</h3>
     }
 
     return (
       <div className="App">
+        <br></br>
         <h1 className="white">Slot Machine</h1>
-
-        <Container>
-          <Row className="justify-content-md-center">
-            <Col xs lg="1" align='center'>
-              <Reel
-                idxStart={1}
-                time={2000}
-                ref={this.reel3}
-                setMoveInAppState={this.setMoveInAppState}
-              />
-            </Col>
-            <Col xs lg="1" align='center'>
-              <Reel
-                idxStart={3}
-                time={2500}
-                ref={this.reel2}
-                setMoveInAppState={this.setMoveInAppState}
-              />
-            </Col>
-            <Col xs lg="1" align='center'>
-              <Reel
-                idxStart={0}
-                time={3000}
-                ref={this.reel1}
-                setMoveInAppState={this.setMoveInAppState}
-              />
-            </Col>
-          </Row>
-        </Container>
-        {regularspin}
-        <Container>
-          <Row className="justify-content-md-center">
-            <Col>
-              <h1 className="white">Balance</h1>
-              <Form.Control value={this.state.balance} onChange={this.onBalanceChange}/>
-            </Col>
-            <Col>
-              <h1 className="white">Pay table</h1>
-              <h3 className={`${blinking}`}>{this.state.paytable}</h3>
-            </Col>
-            <Col>
-              <h1 className="white">Debug</h1>
-              <p className="white">Insert numbers 0 to 4 in each box. (0: 3xBAR, 1: 1xBAR, 2: 2xBAR, 3: 7 Seven, 4: Cherry)</p>
-              <Form onSubmit={this.handleSubmit}>
-                <Form.Label className="white">Reel center row:</Form.Label>
-                <Form.Control type="number" value={this.state.debug1} onChange={this.handleChange}/>
-                <Form.Control type="number" value={this.state.debug2} onChange={this.handleChange1}/>
-                <Form.Control type="number" value={this.state.debug3} onChange={this.handleChange2}/>
-                {debugspin}
-              </Form>
-            </Col>
-          </Row>
-        </Container>
+          <br></br>
+          <Container>
+            <Row className="justify-content-md-center">
+              <Col xs lg="1" align='center'>
+                <Reel
+                  idxStart={1}
+                  time={2000}
+                  ref={this.reel3}
+                  setMoveInAppState={this.setMoveInAppState}
+                />
+              </Col>
+              <Col xs lg="1" align='center'>
+                <Reel
+                  idxStart={3}
+                  time={2500}
+                  ref={this.reel2}
+                  setMoveInAppState={this.setMoveInAppState}
+                />
+              </Col>
+              <Col xs lg="1" align='center'>
+                <Reel
+                  idxStart={0}
+                  time={3000}
+                  ref={this.reel1}
+                  setMoveInAppState={this.setMoveInAppState}
+                />
+              </Col>
+            </Row>
+          </Container>
+          {regularspin}
+          <Container>
+            <Row className="justify-content-md-center">
+              <Col>
+                <h1 className="white">Balance</h1>
+                <Form.Control value={this.state.balance} onChange={this.onBalanceChange}/>
+              </Col>
+              <Col>
+                <h1 className="white">Pay table</h1>
+                <h3 className={`${blinking}`}>{this.state.paytable}</h3>
+              </Col>
+              <Col>
+                <h1 className="white">Debug</h1>
+                <p className="white">Insert numbers 0 to 4 in each box. (0: 3xBAR, 1: 1xBAR, 2: 2xBAR, 3: 7 Seven, 4: Cherry)</p>
+                <Form onSubmit={this.handleSubmit}>
+                  <Form.Label className="white">Reel center row:</Form.Label>
+                  <Form.Control type="number" value={this.state.debug3} onChange={this.handleChange}/>
+                  <Form.Control type="number" value={this.state.debug2} onChange={this.handleChange1}/>
+                  <Form.Control type="number" value={this.state.debug1} onChange={this.handleChange2}/>
+                  {debugspin}
+                </Form>
+              </Col>
+            </Row>
+          </Container>
       </div>
     );
   }
