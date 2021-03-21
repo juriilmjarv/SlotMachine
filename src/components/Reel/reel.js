@@ -1,10 +1,12 @@
 import React from 'react';
+import './reel.css';
 
 import seven from '../../assets/images/7.png';
 import twobar from '../../assets/images/2xBAR.png';
 import threebar from '../../assets/images/3xBAR.png';
 import bar from '../../assets/images/BAR.png';
 import cherry from '../../assets/images/Cherry.png';
+
 
 //global variables for animation
 var timeout;
@@ -33,7 +35,6 @@ class Reel extends React.Component {
       prev: this.getPrevIndex(idxStart),
       move: false,
     };
-    var { changeState} = this.props;
   }
 
   componentDidMount(){
@@ -93,9 +94,11 @@ class Reel extends React.Component {
         move: true
       });
 
+      //Update move state in parent
       if(this.props.time == 3000){
         this.props.setMoveInAppState(this.state.move);
       }
+
       //set the index
       this.setIndexes(this.getNextIndex(this.state.index));
 
@@ -125,7 +128,7 @@ class Reel extends React.Component {
         move: false
       })
 
-      //change a
+      //Update move state in parent
       if(this.props.time == 3000){
         this.props.setMoveInAppState(this.state.move);
       }
@@ -133,6 +136,7 @@ class Reel extends React.Component {
     }, this.props.time);
   }
 
+  //updates move state in parent
   setMoveInReelState = (value) => {
     this.setState({ ...this.state, move: value });
     this.props.setMoveInAppState(value);

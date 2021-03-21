@@ -2,52 +2,18 @@
   text-align: center;
 }
 
-.pic {
-
-  width: 100px;
-  height: 100px;
+.spinbtn {
+  margin: 20px;
 }
 
-.pic img {
-    width: 80px;
-    height: 80px;
+.blink_me {
+  animation: blinker .8s linear infinite;
+  color: red;
 }
 
-.prev {
- bottom: 100px;
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 
-.prev.move {
-  bottom: -100px;
-  transition: all .1s ease;
-  transition-timing-function: linear;
-}
-
-.current {
-  bottom: 200px;
-}
-
-.current.move {
-  bottom: 0;
-  transition: all .1s ease;
-  transition-timing-function: linear;
-}
-
-.next {
-  bottom: 300px;
-}
-
-.next.move {
-  bottom: 100px;
-  transition: all .1s ease;
-  transition-timing-function: linear;
-}
-
-.pic-wrapper {
-  background: lightgray;
-  width: 100px;
-  overflow: hidden;
-  display:flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-}
