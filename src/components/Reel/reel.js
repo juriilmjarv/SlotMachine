@@ -14,6 +14,7 @@ var g;
 var fps = 30;
 
 //define pictures
+/*
 const pics = [
   threebar,
   bar,
@@ -21,6 +22,27 @@ const pics = [
   seven,
   cherry
 ];
+*/
+
+
+
+const pics = {
+  0: threebar,
+  1: bar,
+  2: threebar,
+  3: bar,
+  4: twobar,
+  5: seven,
+  6: twobar,
+  7: cherry,
+  8: twobar, 
+  9: threebar, 
+  10: seven,
+  11: bar, 
+  12: bar,
+}
+
+
 
 class Reel extends React.Component {
 
@@ -38,12 +60,12 @@ class Reel extends React.Component {
   }
 
   componentDidMount(){
-    console.log(this.props);
+    //console.log(Object.keys(pics).length);
   }
 
   //get next item
   getNextIndex(idx) {
-    if (idx >= pics.length - 1) {
+    if (idx >= Object.keys(pics).length - 1) {
       return 0;
     }
     return idx + 1;
@@ -52,7 +74,8 @@ class Reel extends React.Component {
   //get previous item
   getPrevIndex(idx) {
     if (idx <= 0){
-      return pics.length - 1;
+      //return pics.length - 1;
+      return Object.keys(pics).length - 1;
     }
     return idx - 1;
   }

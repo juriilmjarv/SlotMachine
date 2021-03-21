@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.css';
-import {Row, Col, Container, Button, Form, FormLabel } from 'react-bootstrap';
+import {Row, Col, Container, Button, Form, Modal } from 'react-bootstrap';
 import Reel from './components/Reel/reel';
 import wintable from './wintable';
+import reelStack from './reelStack';
 
 class App extends React.Component {
 
@@ -23,9 +24,10 @@ class App extends React.Component {
       center1: 0,
       center2: 0,
       center3: 0,
-      debug1: 0,
-      debug2: 0, 
-      debug3: 0
+      debug1: 4,
+      debug2: 6, 
+      debug3: 8,
+      showModal: false
     }
 
     this.setMoveInAppState = this.setMoveInAppState.bind(this);
@@ -34,12 +36,12 @@ class App extends React.Component {
     this.handleChange1 = this.handleChange1.bind(this);
     this.handleChange2 = this.handleChange2.bind(this);
     this.onBalanceChange = this.onBalanceChange.bind(this);
-
   }
+  
 
   //return random value between 0 and 4
   getRandomNr() {
-    return Math.floor(Math.random() * 5);
+    return Math.floor(Math.random() * 13);
   }
  
   //Start the spinning and stop on specified parameter value
@@ -58,10 +60,15 @@ class App extends React.Component {
     this.reel2.current.stopAtElement(c2);
     this.reel3.current.stopAtElement(c3);
 
+    var a = reelStack[c1]
+    var b = reelStack[c2]
+    var c = reelStack[c3]
+
     //after 3 secs show if won
     setTimeout(() => {
       //if all 3 reels match
-      if(c1 === c3 && c1 === c2){
+      //if(c1 === c3 && c1 === c2){
+        if(a === b && b == c){
 
         //check how much is won
         var prize = this.checkWinningCombo(c1);
@@ -118,7 +125,7 @@ class App extends React.Component {
   
   //handles change
   handleChange = (e) => {
-    const re = /^[0-4]$/;
+    const re = /^([0-9]|1[0-2])$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       this.setState({debug3: e.target.value})
     } 
@@ -126,7 +133,7 @@ class App extends React.Component {
 
   //handles change
   handleChange1 = (e) => {
-    const re = /^[0-4]$/;
+    const re = /^([0-9]|1[0-2])$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       this.setState({debug2: e.target.value})
     } 
@@ -134,7 +141,7 @@ class App extends React.Component {
 
   //handles change
   handleChange2 = (e) => {
-    const re = /^[0-4]$/;
+    const re = /^([0-9]|1[0-2])$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       this.setState({debug1: e.target.value})
     } 
@@ -153,6 +160,18 @@ class App extends React.Component {
     if (e.target.value === '' || re.test(e.target.value)) {
        this.setState({balance: e.target.value})
     } 
+  }
+
+  handleShow = () => {
+    this.setState({
+      showModal: true
+    })
+  }
+
+  handleClose = () => {
+    this.setState({
+      showModal: false
+    })
   }
 
   render(){
@@ -219,9 +238,11 @@ class App extends React.Component {
               </Col>
               <Col>
                 <h1 className="white">Debug</h1>
-                <p className="white">Insert numbers 0 to 4 in each box. (0: 3xBAR, 1: 1xBAR, 2: 2xBAR, 3: 7 Seven, 4: Cherry)</p>
+                <Button variant="primary" onClick={this.handleShow}>
+                  Reel Table
+                </Button>
                 <Form onSubmit={this.handleSubmit}>
-                  <Form.Label className="white">Reel center row:</Form.Label>
+                  <Form.Label className="white">Insert combination for center win:</Form.Label>
                   <Form.Control type="number" value={this.state.debug3} onChange={this.handleChange}/>
                   <Form.Control type="number" value={this.state.debug2} onChange={this.handleChange1}/>
                   <Form.Control type="number" value={this.state.debug1} onChange={this.handleChange2}/>
@@ -229,6 +250,35 @@ class App extends React.Component {
                 </Form>
               </Col>
             </Row>
+
+            <Modal show={this.state.showModal} onHide={this.handleClose} animation={false}>
+              <Modal.Header closeButton>
+                <Modal.Title>Reel Order</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>Higher probability on lower wins and vice versa.</p>
+                <ul>
+                  <li>0: threebar</li>
+                  <li>1: bar</li>
+                  <li>2: threebar</li>
+                  <li>3: bar</li>
+                  <li>4: twobar</li>
+                  <li>5: seven</li>
+                  <li>6: twobar</li>
+                  <li>7: cherry</li>
+                  <li>8: twobar</li>
+                  <li>9: threebar</li>
+                  <li>10: seven</li>
+                  <li>11: bar</li>
+                  <li>12: bar</li>
+                </ul>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.handleClose}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Container>
       </div>
     );
