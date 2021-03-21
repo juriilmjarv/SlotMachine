@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {Row, Col, Container, Button } from 'react-bootstrap';
+import {Row, Col, Container, Button, Form, FormLabel } from 'react-bootstrap';
 import Reel from './components/Reel/reel';
 import wintable from './wintable';
 
@@ -20,17 +20,19 @@ class App extends React.Component {
       balance: 1000,
       paytable: '',
       blinking: false,
-      val1: '',
-      val2: '',
-      val3: '',
       center1: 0,
       center2: 0,
-      center3: 0
+      center3: 0,
+      debug1: 0,
+      debug2: 0, 
+      debug3: 0
     }
 
     this.setMoveInAppState = this.setMoveInAppState.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleChange1 = this.handleChange1.bind(this);
+    this.handleChange2 = this.handleChange2.bind(this);
     this.onBalanceChange = this.onBalanceChange.bind(this);
 
   }
@@ -59,7 +61,7 @@ class App extends React.Component {
     //after 3 secs show if won
     setTimeout(() => {
       //if all 3 reels match
-      if(c1 == c3 && c1 == c2){
+      if(c1 === c3 && c1 === c2){
 
         //check how much is won
         var prize = this.checkWinningCombo(c1);
@@ -110,47 +112,61 @@ class App extends React.Component {
     this.setState({ ...this.state, moving: value });
   };
 
-  handleSubmit = (event) => {
-    //alert('A name was submitted: ' + this.state.val1);
-    this.startReel(this.state.val1, this.state.val1, this.state.val1);
-    event.preventDefault();
-  }
+  
 
   handleChange = (event) => {
     this.setState({
-      ...this.state,
-      [event.target.name]: event.target.value
+      debug1: event.target.value
     });
-    console.log('ev: ' + [event.target.name])
   }
 
+  handleChange1 = (event) => {
+    this.setState({
+      debug2: event.target.value
+    });
+  }
+
+  handleChange2 = (event) => {
+    this.setState({
+      debug3: event.target.value
+    });
+  }
+
+  handleSubmit = (event) => {
+    this.startReel(parseInt(this.state.debug1), parseInt(this.state.debug2), parseInt(this.state.debug3));
+    event.preventDefault();
+  }
+
+  //allow value between 0-5000 only
   onBalanceChange = (e) => {
-    //const re = /^([1-9][0-9]{0,2}|5000)$/;
-
-    // if value is not blank, then test the regex
-
-    //if (e.target.value === '' ){//|| re.test(e.target.value)) {
+    const re = /^(?:[1-9]|\d{2,3}|[1-4]\d{3}|5000)$/;
+    
+    if (e.target.value === '' || re.test(e.target.value)) {
        this.setState({balance: e.target.value})
-    //}
+    } 
   }
 
   render(){
     const blinking = this.state.blinking ? 'blink_me' : '';
     const moving = this.state.moving;
     const balance = this.state.balance;
-    let btn;
+    let regularspin;
+    let debugspin;
 
-    if(moving == false && balance != 0){
-      btn = <Button className='spinbtn' variant="success" onClick={this.startRegReel}>Spin</Button>
-    }else if(moving == true){
-      btn = <h3 className='spinbtn'>Spinning...</h3>
-    } else if(moving == false && balance === 0){
-      btn = <h3 claseName='spinbtn'>Please deposit some money</h3>
+    if(moving === false && balance !== 0){
+      regularspin = <Button className='spinbtn white' variant="success" onClick={this.startRegReel}>Spin</Button>
+      debugspin = <Button className='spinbtn white' type='submit' variant="success">SPIN</Button>
+    }else if(moving === true){
+      regularspin = <h3 className='spinbtn white'>Spinning...</h3>
+      debugspin = <h3 className='spinbtn white'>Spinning...</h3>
+    } else if(moving === false && balance === 0){
+      regularspin = <h3 claseName='spinbtn white'>Please deposit some money 💵</h3>
+      debugspin = <h3 className='spinbtn white'>Make deposit first</h3>
     }
 
     return (
       <div className="App">
-        <h1>Slot Machine</h1>
+        <h1 className="white">Slot Machine</h1>
 
         <Container>
           <Row className="justify-content-md-center">
@@ -180,26 +196,27 @@ class App extends React.Component {
             </Col>
           </Row>
         </Container>
-        {btn}
+        {regularspin}
         <Container>
           <Row className="justify-content-md-center">
             <Col>
-              <h1>Balance</h1>
-              <input value={this.state.balance} onChange={this.onBalanceChange}/>
+              <h1 className="white">Balance</h1>
+              <Form.Control value={this.state.balance} onChange={this.onBalanceChange}/>
             </Col>
             <Col>
-              <h1>Pay table</h1>
+              <h1 className="white">Pay table</h1>
               <h3 className={`${blinking}`}>{this.state.paytable}</h3>
             </Col>
             <Col>
-              <h1>Debug</h1>
-              <p>Insert numbers 0 to 4 in each box. (0: 3xBAR, 1: 1xBAR, 2: 2xBAR, 3: 7 Seven, 4: Cherry)</p>
-              <form onSubmit={this.handleSubmit}>
-                <input name='n' type='number' value={this.state.val1} onChange={this.handleChange}/>
-                <input name='b'type='number' value={this.state.val2} onChange={this.handleChange}/>
-                <input name='a'type='number' value={this.state.val3} onChange={this.handleChange}/>
-                <input type="submit" value="Submit" />
-              </form>
+              <h1 className="white">Debug</h1>
+              <p className="white">Insert numbers 0 to 4 in each box. (0: 3xBAR, 1: 1xBAR, 2: 2xBAR, 3: 7 Seven, 4: Cherry)</p>
+              <Form onSubmit={this.handleSubmit}>
+                <Form.Label className="white">Reel center row:</Form.Label>
+                <Form.Control type="number" value={this.state.debug1} onChange={this.handleChange}/>
+                <Form.Control type="number" value={this.state.debug2} onChange={this.handleChange1}/>
+                <Form.Control type="number" value={this.state.debug3} onChange={this.handleChange2}/>
+                {debugspin}
+              </Form>
             </Col>
           </Row>
         </Container>
