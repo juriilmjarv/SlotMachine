@@ -60,18 +60,35 @@ class App extends React.Component {
     this.reel2.current.stopAtElement(c2);
     this.reel3.current.stopAtElement(c3);
 
-    var a = reelStack[c1]
-    var b = reelStack[c2]
-    var c = reelStack[c3]
-
     //after 3 secs show if won
     setTimeout(() => {
-      //if all 3 reels match
-      //if(c1 === c3 && c1 === c2){
-        if(a === b && b == c){
+      //check if center upper or lower has won
+      if(this.checkCenterWin(c1,c2,c3) || this.checkUpperWin(c1,c2,c3) || this.checkLowerWin(c1,c2,c3)){
+        //prize variable
+        var prize = 0;
 
-        //check how much is won
-        var prize = this.checkWinningCombo(c1);
+        //check how much is won on center line
+        if(this.checkCenterWin(c1,c2,c3)){
+          prize += this.getCenterPrize(c1);
+        }
+
+        //check how much is won on upper line with cherry special condition
+        if(this.checkUpperWin(c1,c2,c3)){
+          if(reelStack[this.reel1.current.getPrevIndex(c1)] === 'cherry'){
+            prize += 2000
+          } else {
+            prize += this.getUpperPrize(c1);
+          }
+        }
+
+        //check how much is won on lower line with cherry special condition
+        if(this.checkLowerWin(c1,c2,c3)){
+          if(reelStack[this.reel1.current.getNextIndex(c1)] === 'cherry'){
+            prize += 4000;
+          } else {
+            prize += this.getLowerPrize(c1);
+          }
+        }
 
         //change the states
         this.setState({
@@ -87,18 +104,70 @@ class App extends React.Component {
     }, 3000)
   };
 
+  //check if center match
+  checkCenterWin = (center1, center2, center3) => {
+    if(reelStack[center1] === reelStack[center2] && reelStack[center2] == reelStack[center3]){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //check id upper row match
+  checkUpperWin = (center1, center2, center3) => {
+    if(reelStack[this.reel1.current.getPrevIndex(center1)] === reelStack[this.reel2.current.getPrevIndex(center2)] && reelStack[this.reel2.current.getPrevIndex(center2)] == reelStack[this.reel3.current.getPrevIndex(center3)]){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //check id lower row match
+  checkLowerWin = (center1, center2, center3) => {
+    if(reelStack[this.reel1.current.getNextIndex(center1)] === reelStack[this.reel2.current.getNextIndex(center2)] && reelStack[this.reel2.current.getNextIndex(center2)] == reelStack[this.reel3.current.getNextIndex(center3)]){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Creates random values and returns 3 random non repetive values to avoid 3 line win!
+  getNonRepetitiveRandomNumbers(){
+    var firstNumber = Math.floor(Math.random() * 21);
+    var secondNumber = Math.floor(Math.random() * 21);
+    var thirdNumber = Math.floor(Math.random() * 21);
+    var differentNumber = false;
+
+    while(!differentNumber){
+        if(secondNumber == thirdNumber){
+          thirdNumber = Math.floor(Math.random() * 21);
+        }
+        else{
+          differentNumber = true;
+        }
+    }
+    return [firstNumber, secondNumber, thirdNumber]
+  }
+
   //Starts regular random reel spin
   startRegReel = () => {
-    var val1 = this.getRandomNr()
-    var val2 = this.getRandomNr()
-    var val3 = this.getRandomNr()
-    this.startReel(val1, val2, val3);
+    var randomNumberArr = this.getNonRepetitiveRandomNumbers()
+    this.startReel(randomNumberArr[0], randomNumberArr[1], randomNumberArr[2]);
   }
 
   //return winning value
-  checkWinningCombo(winVal) {
-    var winPrice = wintable[winVal];
-    return winPrice;
+  getCenterPrize(winVal) {
+    return wintable[winVal];
+  }
+
+  //upper row winning price
+  getUpperPrize(winVal){
+    return wintable[this.reel1.current.getPrevIndex(winVal)];
+  }
+
+  //get lower row winning price
+  getLowerPrize(winVal){
+    return wintable[this.reel1.current.getNextIndex(winVal)];
   }
 
   //blink text for 3 seconds if won
@@ -125,7 +194,7 @@ class App extends React.Component {
   
   //handles change
   handleChange = (e) => {
-    const re = /^([0-9]|1[0-2])$/;
+    const re = /^([0-1]?[0-9]|20)$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       this.setState({debug3: e.target.value})
     } 
@@ -133,7 +202,7 @@ class App extends React.Component {
 
   //handles change
   handleChange1 = (e) => {
-    const re = /^([0-9]|1[0-2])$/;
+    const re = /^([0-1]?[0-9]|20)$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       this.setState({debug2: e.target.value})
     } 
@@ -141,7 +210,7 @@ class App extends React.Component {
 
   //handles change
   handleChange2 = (e) => {
-    const re = /^([0-9]|1[0-2])$/;
+    const re = /^([0-1]?[0-9]|20)$/;
     if (e.target.value === '' || re.test(e.target.value)) {
       this.setState({debug1: e.target.value})
     } 
@@ -242,7 +311,7 @@ class App extends React.Component {
                   Reel Table
                 </Button>
                 <Form onSubmit={this.handleSubmit}>
-                  <Form.Label className="white">Insert combination for center win:</Form.Label>
+                  <Form.Label className="white">Insert combination for center line:</Form.Label>
                   <Form.Control type="number" value={this.state.debug3} onChange={this.handleChange}/>
                   <Form.Control type="number" value={this.state.debug2} onChange={this.handleChange1}/>
                   <Form.Control type="number" value={this.state.debug1} onChange={this.handleChange2}/>
@@ -256,7 +325,7 @@ class App extends React.Component {
                 <Modal.Title>Reel Order</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <p>Higher probability on lower wins and vice versa.</p>
+                <p>Higher probability on lower wins and vice versa. There is 2xCherry, 3xSeven, 4xThreebar, 5xTwobar, 6xBar</p>
                 <ul>
                   <li>0: threebar</li>
                   <li>1: bar</li>
@@ -271,6 +340,14 @@ class App extends React.Component {
                   <li>10: seven</li>
                   <li>11: bar</li>
                   <li>12: bar</li>
+                  <li>13: seven</li>
+                  <li>14: cherry</li>
+                  <li>15: bar</li>
+                  <li>16: twobar</li>
+                  <li>17: threebar</li>
+                  <li>18: twobar</li>
+                  <li>19: twobar</li>
+                  <li>20: bar</li>
                 </ul>
               </Modal.Body>
               <Modal.Footer>

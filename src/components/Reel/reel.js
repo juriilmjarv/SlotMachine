@@ -7,24 +7,10 @@ import threebar from '../../assets/images/3xBAR.png';
 import bar from '../../assets/images/BAR.png';
 import cherry from '../../assets/images/Cherry.png';
 
-
 //global variables for animation
 var timeout;
 var g;
 var fps = 30;
-
-//define pictures
-/*
-const pics = [
-  threebar,
-  bar,
-  twobar,
-  seven,
-  cherry
-];
-*/
-
-
 
 const pics = {
   0: threebar,
@@ -40,9 +26,15 @@ const pics = {
   10: seven,
   11: bar, 
   12: bar,
+  13: seven,
+  14: cherry,
+  15: bar,
+  16: twobar,
+  17: threebar,
+  18: twobar,
+  19: twobar,
+  20: bar
 }
-
-
 
 class Reel extends React.Component {
 

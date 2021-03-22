@@ -11,7 +11,15 @@ const winningCombinations = {
     9: 50,
     10: 150,
     11: 10,
-    12: 10
+    12: 10,
+    13: 150,
+    14: 1000,
+    15: 10,
+    16: 20,
+    17: 50,
+    18: 20,
+    19: 20,
+    20: 10
 }
 
 export default winningCombinations;
