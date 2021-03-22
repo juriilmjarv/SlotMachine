@@ -1,6 +1,14 @@
 # Slot machine application
 
-A simple slot machine that has 3 reels
+A simple slot machine that has 3 reels.
+
+Press Spin button to run the slot. Wait until it stops and see if you won.
+
+Each spin costs 1$
+
+The balance can be set between 1-5000$. If you run out of money, you have to increase the balance.
+
+The debug area lets you insert the center reel combination manually (0-20). See 'Reel Table' button for details.
 
 ## How to run
 
