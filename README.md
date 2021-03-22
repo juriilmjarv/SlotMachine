@@ -26,3 +26,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 - 3 BAR symbols on any line 10
 
 
+## Snapshot
+
+![Image of slotmachine](https://github.com/juriilmjarv/slotmachine/blob/main/src/assets/images/screenshot.png)
