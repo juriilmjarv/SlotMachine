@@ -4,6 +4,7 @@ import {Row, Col, Container, Button, Form, Modal } from 'react-bootstrap';
 import Reel from './components/Reel/reel';
 import wintable from './wintable';
 import reelStack from './reelStack';
+import spinSound from './assets/soundeffects/spin2.wav';
 
 class App extends React.Component {
 
@@ -27,7 +28,8 @@ class App extends React.Component {
       debug1: 4,
       debug2: 6, 
       debug3: 8,
-      showModal: false
+      showModal: false,
+      soundPlaying: false
     }
 
     this.setMoveInAppState = this.setMoveInAppState.bind(this);
@@ -37,22 +39,25 @@ class App extends React.Component {
     this.handleChange2 = this.handleChange2.bind(this);
     this.onBalanceChange = this.onBalanceChange.bind(this);
   }
-  
 
   //return random value between 0 and 4
   getRandomNr() {
     return Math.floor(Math.random() * 13);
   }
- 
+
   //Start the spinning and stop on specified parameter value
   startReel = (c1, c2, c3) => {
+
+    //play sound effect
+    const audioEl = document.getElementsByClassName("audio-element")[0]
+    audioEl.play();
 
     //update state
     this.setState({
       center1: c1,
       center2: c2,
       center3: c3,
-      balance: this.state.balance - 1
+      balance: this.state.balance - 1,
     })
 
     //start spin
@@ -60,8 +65,14 @@ class App extends React.Component {
     this.reel2.current.stopAtElement(c2);
     this.reel3.current.stopAtElement(c3);
 
+
     //after 3 secs show if won
     setTimeout(() => {
+
+      //stop sound effect
+      audioEl.pause();
+      audioEl.currentTime = 0;
+
       //check if center upper or lower has won
       if(this.checkCenterWin(c1,c2,c3) || this.checkUpperWin(c1,c2,c3) || this.checkLowerWin(c1,c2,c3)){
         //prize variable
@@ -357,6 +368,11 @@ class App extends React.Component {
               </Modal.Footer>
             </Modal>
           </Container>
+          <div>
+            <audio className="audio-element">
+              <source src={spinSound}></source>
+            </audio>
+          </div>
       </div>
     );
   }
